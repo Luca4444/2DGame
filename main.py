@@ -569,37 +569,39 @@ class Level1:
 
     def decorations(self):
         coordinates = [[[6, 13], [19, 8]], [[6, 45], [19, 8]]]
-        plant0 = Decorations(10, 110, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant1 = Decorations(30, 60, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant2 = Decorations(20, 220, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant3 = Decorations(15, 140, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant4 = Decorations(27, 80, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
 
-        plant5 = Decorations(38, 280, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
+        plantsPosTopLeft = [
+                     [ 10,  16], [ 27,  38], [ 11,  62], [ 26,  79], [  9, 100], [ 24, 118], [  9, 139], [ 28, 155],
+                     [ 10, 171], [ 25, 220], [ 38, 200], [ 5, 198], [  8, 245], [33,  255], [ 13, 272], [ 38, 280],
+                     [ 30, 298],
+                     [ 63, 248],
+                     [ 68, 303], [ 92, 258], [103, 281], [121, 242], [131, 261], [132, 285], [164, 233], [167, 292],
+                     [174, 266], [229, 249], [209, 255], [210, 294], [250, 300], [268, 234], [278, 266], [296, 302],
+                     [329, 290], [357, 268], [335, 254], [309, 232], [357, 217], [335, 197], [353, 171], [320, 185],
+                     [346, 125], [363,  91], [330,  94], [368,  72], [336,  52], [366,  33], [345,  15]]
 
-        plant6 = Decorations(130, 250, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant7 = Decorations(150, 290, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant8 = Decorations(170, 290, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant9 = Decorations(190, 260, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant10 = Decorations(210, 270, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant11 = Decorations(230, 290, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant12 = Decorations(250, 300, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant13 = Decorations(270, 230, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
+        plantsPosTopRight = []
+        plantsPosBottomRight = []
+        plantsPosBottomLeft = []
 
-        plant14 = Decorations(290, 120, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant15 = Decorations(310, 80, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant16 = Decorations(330, 260, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant17 = Decorations(350, 180, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant18 = Decorations(370, 240, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant19 = Decorations(240, 280, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
-        plant20 = Decorations(280, 130, 20, 10, coordinates, "pictures/plant.png", imageRate=0.02)
+        for pos in plantsPosTopLeft:
+            self.decorationsList.append(Decorations(pos[0], pos[1], 20, 10,
+                                                    coordinates, "pictures/plant.png", imageRate=0.02))
+            plantsPosTopRight.append([pos[0]+590, pos[1]])
+            if 38 < pos[0] < 280 and pos[1] > 230:
+                plantsPosBottomLeft.append([pos[0], pos[1] + 280])
+                plantsPosBottomRight.append([pos[0] + 590, pos[1] + 280])
+            else:
+                plantsPosBottomLeft.append([pos[0], pos[1]+490])
+                plantsPosBottomRight.append([pos[0]+590, pos[1]+490])
 
-        self.decorationsList = [plant0, plant1, plant2, plant3, plant4,
-                                plant5, plant6, plant7, plant8, plant9,
-                                plant10, plant11, plant12, plant13, plant14,
-                                plant15, plant16, plant17, plant18, plant19,
-                                plant20
-                                ]
+        for i in range(len(plantsPosBottomRight)-1):
+            self.decorationsList.append(Decorations(plantsPosTopRight[i][0], plantsPosTopRight[i][1], 20, 10,
+                                                    coordinates, "pictures/plant.png", imageRate=0.02))
+            self.decorationsList.append(Decorations(plantsPosBottomLeft[i][0], plantsPosBottomLeft[i][1], 20, 10,
+                                                    coordinates, "pictures/plant.png", imageRate=0.02))
+            self.decorationsList.append(Decorations(plantsPosBottomRight[i][0], plantsPosBottomRight[i][1], 20, 10,
+                                                    coordinates, "pictures/plant.png", imageRate=0.02))
 
     def enemys(self):
         # enemy1 = Enemy("pictures/PlayerSpritesheet.png",
@@ -1126,7 +1128,7 @@ class Enemy(pygame.sprite.Sprite):
 
         screen.blit(pygame.transform.scale(image, (self.enemyRect.w, self.enemyRect.h)), self.enemyRect)
 
-
+ 
 class Bullet:
     def __init__(self, width, height, playerRect, speed=4, image=None):
         super().__init__()
@@ -1543,7 +1545,7 @@ class Level3:
         self.walls()
         self.decorations()
         self.buildings()
-        self.player = Player(30, 60, 500, 400, self.getBoundaries())
+        self.player = Player(30, 60, 500, 700, self.getBoundaries())
         self.borderWallsImage = pygame.image.load("pictures/insideLucaHouse.png").convert_alpha()
         self.enemyWave = None
 
@@ -1565,8 +1567,9 @@ class Level3:
 
         wall17 = Wall(None, width=100, height=330, xPOS=862, yPOS=355)
         wall18 = Wall(None, width=106, height=115, xPOS=506, yPOS=345)
+        wall19 = Wall(None, width=70, height=235, xPOS=55, yPOS=500)
 
-        self.wallsList = [wall12, wall13, wall14, wall15, wall16, wall17, wall18]
+        self.wallsList = [wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19]
 
         return self.wallsList
 
